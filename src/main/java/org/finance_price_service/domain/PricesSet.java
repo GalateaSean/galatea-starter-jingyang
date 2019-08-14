@@ -1,38 +1,28 @@
 package org.finance_price_service.domain;
 
 import java.util.Vector;
+import lombok.Builder;
+import lombok.Getter;
 
+@Builder
+@Getter
 public class PricesSet {
+
   private final String symbol;
-  private int days;
-  private Vector<OneDayPrice> prices;
 
-  public PricesSet(String symbol) {
-    this.symbol = symbol;
-    this.days = 0;
-    this.prices = new Vector<OneDayPrice>();
-  }
+  @Builder.Default
+  private int days = 0;
 
-  public PricesSet(String symbol, int days, Vector<OneDayPrice> prices) {
-    this.symbol = symbol;
-    this.days = days;
-    this.prices = prices;
-  }
+  @Builder.Default
+  private Vector<OneDayPrice> prices = new Vector<OneDayPrice>();
 
-  public void addPrice(OneDayPrice p) {
+  /**
+   * Add a OneDayPrice object to the list
+   * @param oneDayPrice A OneDayPrice object
+   */
+  public void addPrice(OneDayPrice oneDayPrice) {
     ++this.days;
-    this.prices.add(p);
+    this.prices.add(oneDayPrice);
   }
 
-  public String getSymbol() {
-    return this.symbol;
-  }
-
-  public int getDays() {
-    return this.days;
-  }
-
-  public Vector<OneDayPrice> getPrices() {
-    return this.prices;
-  }
 }

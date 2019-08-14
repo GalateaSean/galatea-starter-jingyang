@@ -1,7 +1,6 @@
 package org.finance_price_service.service;
 
 import java.util.Vector;
-import org.finance_price_service.domain.ClosedDate;
 import org.finance_price_service.domain.OneDayPrice;
 import org.finance_price_service.domain.PricesSet;
 import org.finance_price_service.domain.rspy.ClosedDatesRepository;
@@ -14,8 +13,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MySQLService {
-  @Autowired private PricesRepository pricesRepository;
-  @Autowired private ClosedDatesRepository closedDatesRepository;
+
+  @Autowired
+  private PricesRepository pricesRepository;
+
+  @Autowired
+  private ClosedDatesRepository closedDatesRepository;
 
   /**
    * SELECT
@@ -46,4 +49,5 @@ public class MySQLService {
   public boolean isCloseDay(String date) {
     return closedDatesRepository.existsByDate(date);
   }
+
 }

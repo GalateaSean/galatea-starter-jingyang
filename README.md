@@ -56,11 +56,11 @@ Maintain data on MySQL, when a user request comes, the server requests data from
     A JPA repository for stock market closed dates.
     
 #### Resources
-- AlphaVantageConfig
+- application.yml
 
-    Configuration file for Alpha Vantage API accessing.
+    Configuration file.
 ### Query Logic Process
-1) heck symbol & date (count back for N days, excluding holidays) in the DB, if all found, return and construct a JSON response.
+1) Check symbol & date (count back for N days, excluding holidays) in the DB, if all found, return and construct a JSON response.
 2) If any dates data is missing, note the missing dates, access to Alpha Vantage and update the DB. 
 ### Interface Design
 - Query URL Example

@@ -16,3 +16,6 @@ alphavantage:
 
 date:
   format: yyyy-MM-dd
+
+message:
+  update-succeed: Updated %s data successfully!

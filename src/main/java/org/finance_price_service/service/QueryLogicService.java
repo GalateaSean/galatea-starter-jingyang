@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.PrimitiveIterator;
 import org.finance_price_service.domain.OneDayPrice;
 import org.finance_price_service.domain.PricesSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,23 @@ import static org.finance_price_service.domain.AlphaVantageAPIKeywords.*;
  */
 @Service
 public class QueryLogicService {
+
   @Autowired
-  private MySQLService sql;
+  private MySQLService mySQLService;
+
   @Autowired
-  private AlphaVantageService alpha;
+  private AlphaVantageService alphaVantageService;
 
   @Value("${date.format}")
   private String dateFormat;
 
+  @Value("${message.update-succeed}")
+  private String updateSucceedMessage;
+
   private boolean marketClosed(String date) throws ParseException {
-    Calendar c = Calendar.getInstance();
-    c.setTime(new SimpleDateFormat(dateFormat).parse(date));
-    if ((c.get(Calendar.DAY_OF_WEEK)) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || sql.isCloseDay(date))
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new SimpleDateFormat(dateFormat).parse(date));
+    if ((cal.get(Calendar.DAY_OF_WEEK)) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || mySQLService.isCloseDay(date))
       return true;
     else
       return false;
@@ -43,14 +49,14 @@ public class QueryLogicService {
    * @return
    */
   public PricesSet query (String symbol, int days) throws Exception {
-    PricesSet res = new PricesSet(symbol);
+    PricesSet resPricesSet = PricesSet.builder().symbol(symbol).build();
     int countingDays = days;
     boolean updated = false;
     for (int i = 0; i < countingDays; ++i) {
       Calendar cal = Calendar.getInstance();
       cal.add(Calendar.DATE, -i);
       String date = new SimpleDateFormat(dateFormat).format(cal.getTime());
-      OneDayPrice selected = sql.select(symbol, date);
+      OneDayPrice selected = mySQLService.select(symbol, date);
       if (selected == null) {
         if (!marketClosed(date) && !updated) {
           String mode = days <= 100 ? COMPACT.key : FULL.key;
@@ -62,9 +68,9 @@ public class QueryLogicService {
           ++countingDays;
       }
       else
-        res.addPrice(selected);
+        resPricesSet.addPrice(selected);
       }
-    return res;
+    return resPricesSet;
   }
 
   /**
@@ -74,31 +80,30 @@ public class QueryLogicService {
    * @throws Exception
    */
   public String update(String symbol, String mode) throws Exception {
-    String alphaJsonString = alpha.fetch(symbol, mode);
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode alphaJsonNode = mapper.readTree(alphaJsonString);
-    if (alphaJsonNode.has(ERROR.key)) return null;
+    String alphaJsonString = alphaVantageService.fetch(symbol, mode);
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode alphaJsonNode = objectMapper.readTree(alphaJsonString);
+    if (alphaJsonNode.has(ERROR.key))
+      return null;
 
-    /**
-     * Converts JsonNode to PricesSet
-     */
-    PricesSet prices = new PricesSet(symbol);
+    //Converts JsonNode to PricesSet
+    PricesSet prices = PricesSet.builder().symbol(symbol).build();
     JsonNode priceArray = alphaJsonNode.get(Time_Series.key);
     Iterator<Entry<String, JsonNode>> fields = priceArray.fields();
     while (fields.hasNext()) {
       Entry<String, JsonNode> jsonField = fields.next();
-      OneDayPrice price = new OneDayPrice();
       String date = jsonField.getKey();
       double open = jsonField.getValue().get(OPEN.key).asDouble();
       double high = jsonField.getValue().get(HIGH.key).asDouble();
       double low = jsonField.getValue().get(LOW.key).asDouble();
       double close = jsonField.getValue().get(CLOSE.key).asDouble();
       int volume = jsonField.getValue().get(VOLUME.key).asInt();
-      price.setValue(symbol, date, open, high, low, close, volume);
+      OneDayPrice price = OneDayPrice.builder().symbol(symbol).date(date).open(open).high(high).low(low).close(close).volume(volume).build();
       prices.addPrice(price);
     }
 
-    sql.insert(prices);
-    return String.format("Updated %s data successfully!", symbol);
+    mySQLService.insert(prices);
+    return String.format(updateSucceedMessage, symbol);
   }
+
 }

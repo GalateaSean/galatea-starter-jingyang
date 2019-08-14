@@ -1,15 +1,16 @@
 package org.finance_price_service.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Table(name = "closed_dates")
+@Getter
 public class ClosedDate {
+
   @Id
   private String date;
 
-  public String getDate() { return this.date; }
 }
