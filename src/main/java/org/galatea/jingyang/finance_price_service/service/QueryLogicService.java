@@ -1,4 +1,4 @@
-package org.finance_price_service.service;
+package org.galatea.jingyang.finance_price_service.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,13 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.PrimitiveIterator;
-import org.finance_price_service.domain.OneDayPrice;
-import org.finance_price_service.domain.PricesSet;
+import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
+import org.galatea.jingyang.finance_price_service.domain.PricesSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import static org.finance_price_service.domain.AlphaVantageAPIKeywords.*;
+import static org.galatea.jingyang.finance_price_service.domain.AlphaVantageAPIKeywords.*;
 
 /**
  * Deals with the processing logic for upcoming queries.

@@ -1,4 +1,4 @@
-package org.finance_price_service.domain;
+package org.galatea.jingyang.finance_price_service.domain;
 
 import java.util.Vector;
 import lombok.Builder;

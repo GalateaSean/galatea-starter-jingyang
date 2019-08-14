@@ -1,6 +1,6 @@
-package org.finance_price_service.entrypoint;
-  import org.finance_price_service.domain.PricesSet;
-  import org.finance_price_service.service.QueryLogicService;
+package org.galatea.jingyang.finance_price_service.entrypoint;
+  import org.galatea.jingyang.finance_price_service.domain.PricesSet;
+  import org.galatea.jingyang.finance_price_service.service.QueryLogicService;
   import org.springframework.beans.factory.annotation.Autowired;
   import org.springframework.web.bind.annotation.RequestMapping;
   import org.springframework.web.bind.annotation.RequestParam;

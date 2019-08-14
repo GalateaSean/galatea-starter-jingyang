@@ -1,4 +1,4 @@
-package org.finance_price_service.service;
+package org.galatea.jingyang.finance_price_service.service;
 
 import java.net.URL;
 import java.nio.charset.Charset;

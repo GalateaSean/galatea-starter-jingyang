@@ -1,4 +1,4 @@
-package org.finance_price_service.domain;
+package org.galatea.jingyang.finance_price_service.domain;
 
 public enum AlphaVantageAPIKeywords {
   Meta_Data("Meta Data"),

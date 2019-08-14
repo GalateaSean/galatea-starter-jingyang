@@ -1,4 +1,4 @@
-package org.finance_price_service.domain;
+package org.galatea.jingyang.finance_price_service.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import org.finance_price_service.domain.OneDayPrice.OneDayPriceId;
+import org.galatea.jingyang.finance_price_service.domain.OneDayPrice.OneDayPriceId;
 
 @Entity
 @Table(name = "stock_prices")
