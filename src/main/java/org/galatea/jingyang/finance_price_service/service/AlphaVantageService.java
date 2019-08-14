@@ -1,7 +1,8 @@
 package org.galatea.jingyang.finance_price_service.service;
 
+import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +23,13 @@ public class AlphaVantageService {
 
   /**
    * Fetchs data from Alpha Vantage
+   *
    * @param symbol Stock symbol
    * @return       JSON String, Alpha Vantage API response
    * @throws Exception
    */
-  public String fetch(String symbol, String mode) throws Exception {
-    String AlphaURL = String.format(url, symbol, mode, this.apiKey);
-    return IOUtils.toString(new URL(AlphaURL), Charset.forName("UTF-8"));
+  public String fetch(String symbol, String mode) throws IOException {
+    String alphaURL = String.format(url, symbol, mode, this.apiKey);
+    return IOUtils.toString(new URL(alphaURL), StandardCharsets.UTF_8);
   }
 }

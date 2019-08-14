@@ -1,6 +1,6 @@
 package org.galatea.jingyang.finance_price_service.domain;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public class PricesSet {
   private int days = 0;
 
   @Builder.Default
-  private Vector<OneDayPrice> prices = new Vector<OneDayPrice>();
+  private ArrayList<OneDayPrice> prices = new ArrayList<>();
 
   /**
    * Add a OneDayPrice object to the list

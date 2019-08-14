@@ -1,6 +1,6 @@
 package org.galatea.jingyang.finance_price_service.service;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
 import org.galatea.jingyang.finance_price_service.domain.PricesSet;
 import org.galatea.jingyang.finance_price_service.domain.rspy.ClosedDatesRepository;
@@ -27,8 +27,8 @@ public class MySQLService {
    * @return       OneDayPrice Object
    */
   public OneDayPrice select(String symbol, String date) {
-    Vector<OneDayPrice> price = pricesRepository.findBySymbolAndDate(symbol, date);
-    return price.isEmpty() ? null : price.firstElement();
+    ArrayList<OneDayPrice> price = pricesRepository.findBySymbolAndDate(symbol, date);
+    return price.isEmpty() ? null : price.get(0);
   }
 
   /**
