@@ -13,6 +13,7 @@ alphavantage:
   outputsize:
     compact: compact
     full: full
+  compact-mode-data-points: 100
 
 date:
   format: yyyy-MM-dd

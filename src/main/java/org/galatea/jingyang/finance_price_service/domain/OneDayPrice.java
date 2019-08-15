@@ -8,17 +8,17 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice.OneDayPriceId;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 @Entity
 @Table(name = "stock_prices")
 @IdClass(OneDayPriceId.class)
-@Builder
-@Value
-@AllArgsConstructor
-@NoArgsConstructor(force = true)
 public class OneDayPrice{
 
   @Id
@@ -35,6 +35,9 @@ public class OneDayPrice{
   private double close;
   private int volume;
 
+  @Builder
+  @AllArgsConstructor
+  @NoArgsConstructor
   public static class OneDayPriceId implements  Serializable {
     private String symbol;
     private String date;
