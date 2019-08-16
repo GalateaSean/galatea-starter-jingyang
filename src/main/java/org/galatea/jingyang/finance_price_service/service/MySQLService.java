@@ -2,6 +2,7 @@ package org.galatea.jingyang.finance_price_service.service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import org.galatea.jingyang.finance_price_service.domain.ClosedDate;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice.OneDayPriceId;
 import org.galatea.jingyang.finance_price_service.domain.PricesSet;
@@ -73,6 +74,14 @@ public class MySQLService {
    */
   public boolean isCloseDay(String date) {
     return closedDatesRepository.existsByDate(date);
+  }
+
+
+  public void insertClosedDates(ArrayList<String> closedDates) {
+    for (String date : closedDates) {
+      ClosedDate closedDate = ClosedDate.builder().date(date).build();
+      closedDatesRepository.save(closedDate);
+    }
   }
 
 }

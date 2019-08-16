@@ -6,10 +6,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
 import org.galatea.jingyang.finance_price_service.domain.PricesSet;
 import org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageJSON;
+import org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageJSON.DataToUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -115,11 +115,14 @@ public class QueryLogicService {
     ObjectMapper objectMapper = new ObjectMapper();
     String mode = days < compactModeDataPoints ? COMPACT : FULL;
     String alphaVantageJsonString = alphaVantageService.fetch(symbol, mode);
-    PricesSet pricesSetToUpdate = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class).getPricesToUpdate(datesToUpdate);
-    if (pricesSetToUpdate == null) {
+    DataToUpdate dataToUpdate = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class).getDataToUpdate(datesToUpdate);
+    if (dataToUpdate == null) {
       return null;
     }
-    mySQLService.insertPrices(pricesSetToUpdate);
+    PricesSet pricesToUpdate = dataToUpdate.getPrices();
+    ArrayList<String> closedDatesToUpdate = dataToUpdate.getDates();
+    mySQLService.insertPrices(pricesToUpdate);
+    mySQLService.insertClosedDates(closedDatesToUpdate);
     return String.format(updateSucceedMessage, symbol);
   }
 
