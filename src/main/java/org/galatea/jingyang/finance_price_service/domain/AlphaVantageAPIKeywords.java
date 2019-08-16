@@ -1,23 +1,24 @@
 package org.galatea.jingyang.finance_price_service.domain;
 
-public enum AlphaVantageAPIKeywords {
-  META_DATA("Meta Data"),
-  TIME_SERIES("Time Series (Daily)"),
-  INFORMATION("1. Information"),
-  SYMBOL("2. Symbol"),
-  LAST_REFRESHED("3. Last Refreshed"),
-  OUTPUT_SIZE("4. Output Size"),
-  TIME_ZONE("5. Time Zone"),
-  OPEN("1. open"),
-  HIGH("2. high"),
-  LOW("3. low"),
-  CLOSE("4. close"),
-  VOLUME("5. volume"),
-  ERROR("Error Message"),
-  COMPACT("compact"),
-  FULL("full");
+import lombok.experimental.UtilityClass;
 
-  public final String key;
+@UtilityClass
+public class AlphaVantageAPIKeywords {
 
-  private AlphaVantageAPIKeywords(String key) { this.key = key; }
+  public static final String META_DATA = "Meta Data";
+  public static final String TIME_SERIES = "Time Series (Daily)";
+  public static final String INFORMATION = "1. Information";
+  public static final String SYMBOL = "2. Symbol";
+  public static final String LAST_REFRESHED = "3. Last Refreshed";
+  public static final String OUTPUT_SIZE = "4. Output Size";
+  public static final String TIME_ZONE = "5. Time Zone";
+  public static final String OPEN = "1. open";
+  public static final String HIGH = "2. high";
+  public static final String LOW = "3. low";
+  public static final String CLOSE = "4. close";
+  public static final String VOLUME = "5. volume";
+  public static final String ERROR = "Error Message";
+  public static final String COMPACT = "compact";
+  public static final String FULL = "full";
+
 }

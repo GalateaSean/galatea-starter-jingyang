@@ -79,20 +79,20 @@ public class QueryLogicService {
 
   private String updatePrices(String symbol, int days, List<String> datesToUpdate) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    String mode = days <= compactModeDataPoints ? COMPACT.key : FULL.key;
+    String mode = days <= compactModeDataPoints ? COMPACT : FULL;
     String alphaJsonString = alphaVantageService.fetch(symbol, mode);
     JsonNode alphaJsonNode = objectMapper.readTree(alphaJsonString);
-    if (alphaJsonNode.has(ERROR.key)) return null;
-    JsonNode timeSeries = alphaJsonNode.get(TIME_SERIES.key);
+    if (alphaJsonNode.has(ERROR)) return null;
+    JsonNode timeSeries = alphaJsonNode.get(TIME_SERIES);
     for (String date : datesToUpdate) {
       OneDayPrice price = OneDayPrice.builder()
           .symbol(symbol)
           .date(date)
-          .open(timeSeries.get(date).get(OPEN.key).asDouble())
-          .high(timeSeries.get(date).get(HIGH.key).asDouble())
-          .low(timeSeries.get(date).get(LOW.key).asDouble())
-          .close(timeSeries.get(date).get(CLOSE.key).asDouble())
-          .volume(timeSeries.get(date).get(VOLUME.key).asInt())
+          .open(timeSeries.get(date).get(OPEN).asDouble())
+          .high(timeSeries.get(date).get(HIGH).asDouble())
+          .low(timeSeries.get(date).get(LOW).asDouble())
+          .close(timeSeries.get(date).get(CLOSE).asDouble())
+          .volume(timeSeries.get(date).get(VOLUME).asInt())
           .build();
       mySQLService.insertSinglePrice(price);
     }
