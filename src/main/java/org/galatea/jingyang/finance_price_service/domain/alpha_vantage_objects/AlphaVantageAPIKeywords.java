@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service.domain;
+package org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects;
 
 import lombok.experimental.UtilityClass;
 

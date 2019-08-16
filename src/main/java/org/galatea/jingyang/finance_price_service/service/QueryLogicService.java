@@ -1,6 +1,5 @@
 package org.galatea.jingyang.finance_price_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.text.ParseException;
@@ -10,10 +9,11 @@ import java.util.Calendar;
 import java.util.List;
 import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
 import org.galatea.jingyang.finance_price_service.domain.PricesSet;
+import org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import static org.galatea.jingyang.finance_price_service.domain.AlphaVantageAPIKeywords.*;
+import static org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageAPIKeywords.*;
 
 /**
  * Deals with the processing logic for upcoming queries.
@@ -111,27 +111,12 @@ public class QueryLogicService {
    * @return Update succeed message
    * @throws IOException
    */
-  private String updatePrices(String symbol, int days, List<String> datesToUpdate) throws IOException {
+  private String updatePrices(String symbol, int days, ArrayList<String> datesToUpdate) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    String mode = days <= compactModeDataPoints ? COMPACT : FULL;
-    String alphaJsonString = alphaVantageService.fetch(symbol, mode);
-    JsonNode alphaJsonNode = objectMapper.readTree(alphaJsonString);
-    if (alphaJsonNode.has(ERROR)) {
-      return null;
-    }
-    JsonNode timeSeries = alphaJsonNode.get(TIME_SERIES);
-    for (String date : datesToUpdate) {
-      OneDayPrice price = OneDayPrice.builder()
-          .symbol(symbol)
-          .date(date)
-          .open(timeSeries.get(date).get(OPEN).asDouble())
-          .high(timeSeries.get(date).get(HIGH).asDouble())
-          .low(timeSeries.get(date).get(LOW).asDouble())
-          .close(timeSeries.get(date).get(CLOSE).asDouble())
-          .volume(timeSeries.get(date).get(VOLUME).asInt())
-          .build();
-      mySQLService.insertSinglePrice(price);
-    }
+    String mode = days < compactModeDataPoints ? COMPACT : FULL;
+    String alphaVantageJsonString = alphaVantageService.fetch(symbol, mode);
+    PricesSet pricesSetToUpdate = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class).getPricesToUpdate(datesToUpdate);
+    mySQLService.insertPrices(pricesSetToUpdate);
     return String.format(updateSucceedMessage, symbol);
   }
 
