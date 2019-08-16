@@ -116,6 +116,9 @@ public class QueryLogicService {
     String mode = days < compactModeDataPoints ? COMPACT : FULL;
     String alphaVantageJsonString = alphaVantageService.fetch(symbol, mode);
     PricesSet pricesSetToUpdate = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class).getPricesToUpdate(datesToUpdate);
+    if (pricesSetToUpdate == null) {
+      return null;
+    }
     mySQLService.insertPrices(pricesSetToUpdate);
     return String.format(updateSucceedMessage, symbol);
   }
