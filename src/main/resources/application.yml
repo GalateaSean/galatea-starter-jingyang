@@ -1,0 +1,22 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: root
+
+alphavantage:
+  url: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=%s&outputsize=%s&apikey=%s
+  apikey: RFISYPX8K6DYSF40
+  outputsize:
+    compact: compact
+    full: full
+  compact-mode-data-points: 100
+
+date:
+  format: yyyy-MM-dd
+
+message:
+  update-succeed: Updated %s data successfully!
