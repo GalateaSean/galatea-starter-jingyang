@@ -39,17 +39,35 @@ public class QueryLogicService {
   @Value("${alphavantage.compact-mode-data-points}")
   private int compactModeDataPoints;
 
+  /**
+   * Check if market is closed on a date
+   *
+   * @param date Date string, format "yyyy-MM-dd"
+   * @return Boolean
+   * @throws ParseException
+   */
   private boolean marketClosed(String date) throws ParseException {
     Calendar cal = Calendar.getInstance();
     cal.setTime(new SimpleDateFormat(dateFormat).parse(date));
-    return (cal.get(Calendar.DAY_OF_WEEK)) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || mySQLService.isCloseDay(date);
+    return cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+        || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+        || mySQLService.isCloseDay(date);
   }
 
 
+  /**
+   * Counts back specific number of days from yesterday for dates wanted
+   *
+   * @param days Number of days
+   * @return     List of all market open dates
+   * @throws ParseException
+   */
   private ArrayList<String> getOpenDatesList(int days) throws ParseException {
     ArrayList<String> openDatesList = new ArrayList<>();
     // Days number should be greater than 0
-    if (days <= 0) return openDatesList;
+    if (days <= 0) {
+      return openDatesList;
+    }
     // Number of days counting back from yesterday (possible to be market closed date)
     int countDays = 1;
     // Number of market open days ever met
@@ -68,6 +86,13 @@ public class QueryLogicService {
     return openDatesList;
   }
 
+  /**
+   * Compare wanted dates data with existing dates in database, get missing dates
+   *
+   * @param pricesList    List of prices data in database
+   * @param openDatesList Wanted open market dates
+   * @return Listed of missing dates, to be updated
+   */
   private ArrayList<String> getDatesToUpdate(ArrayList<OneDayPrice> pricesList, ArrayList<String> openDatesList) {
     ArrayList<String> datesInDB = new ArrayList<>();
     for (OneDayPrice price : pricesList) {
@@ -77,12 +102,23 @@ public class QueryLogicService {
     return openDatesList;
   }
 
+  /**
+   * Reach Alpha Vantage API for data, insert wanted missing data into database
+   *
+   * @param symbol        Stock symbol
+   * @param days          Number of dates the user requested
+   * @param datesToUpdate List of dates to be inserted into database
+   * @return Update succeed message
+   * @throws IOException
+   */
   private String updatePrices(String symbol, int days, List<String> datesToUpdate) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     String mode = days <= compactModeDataPoints ? COMPACT : FULL;
     String alphaJsonString = alphaVantageService.fetch(symbol, mode);
     JsonNode alphaJsonNode = objectMapper.readTree(alphaJsonString);
-    if (alphaJsonNode.has(ERROR)) return null;
+    if (alphaJsonNode.has(ERROR)) {
+      return null;
+    }
     JsonNode timeSeries = alphaJsonNode.get(TIME_SERIES);
     for (String date : datesToUpdate) {
       OneDayPrice price = OneDayPrice.builder()
@@ -107,17 +143,22 @@ public class QueryLogicService {
    */
   public PricesSet queryPrices(String symbol, int days) throws ParseException, IOException {
     ArrayList<String> openDatesList = getOpenDatesList(days);
+    if (openDatesList.isEmpty()) {
+      return PricesSet.builder().symbol(symbol).build();
+    }
     // The first date in the result price data, i.e. the furthest date we want
     String startDate = openDatesList.get(openDatesList.size() - 1);
     // The last date in the result price data, i.e. yesterday date
     String endDate = openDatesList.get(0);
-    ArrayList<OneDayPrice> priceList = mySQLService.selectPrices(symbol, startDate, endDate);
-    if (priceList.size() < days) {
-      ArrayList<String> datesToUpdate = getDatesToUpdate(priceList, openDatesList);
-      if (updatePrices(symbol, days, datesToUpdate) == null) return null;
-      priceList = mySQLService.selectPrices(symbol, startDate, endDate);
+    ArrayList<OneDayPrice> pricesList = mySQLService.selectPrices(symbol, startDate, endDate);
+    if (pricesList.size() < days) {
+      ArrayList<String> datesToUpdate = getDatesToUpdate(pricesList, openDatesList);
+      if (updatePrices(symbol, days, datesToUpdate) == null) {
+        return null;
+      }
+      pricesList = mySQLService.selectPrices(symbol, startDate, endDate);
     }
-    return PricesSet.builder().symbol(symbol).days(days).prices(priceList).build();
+    return PricesSet.builder().symbol(symbol).days(days).prices(pricesList).build();
   }
 
 }

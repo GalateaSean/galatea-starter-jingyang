@@ -23,7 +23,7 @@ public class MySQLService {
   private ClosedDatesRepository closedDatesRepository;
 
   /**
-   * SELECT
+   * SELECT Gets the price data of specific stock and date
    * @param symbol Stock symbol
    * @param date   Specific date for price data
    * @return       OneDayPrice Object

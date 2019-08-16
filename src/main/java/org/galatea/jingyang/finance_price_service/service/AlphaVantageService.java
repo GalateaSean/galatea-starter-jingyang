@@ -32,4 +32,5 @@ public class AlphaVantageService {
     String alphaURL = String.format(url, symbol, mode, this.apiKey);
     return IOUtils.toString(new URL(alphaURL), StandardCharsets.UTF_8);
   }
+
 }

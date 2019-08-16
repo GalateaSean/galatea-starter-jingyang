@@ -23,7 +23,7 @@ public class PricesController {
    * @param symbol Stock symbol
    * @param days   Days number that the user wants the data counting back from current date
    * @return       PricesSet Object
-   * @throws Exception
+   * @throws IOException, ParseException
    */
   @GetMapping("/query")
   public PricesSet queryRequest(@RequestParam(value = "symbol") String symbol, @RequestParam(value = "days", defaultValue = "0") int days)
