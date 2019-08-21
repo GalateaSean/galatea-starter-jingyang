@@ -1,7 +1,7 @@
-package org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects;
+package org.galatea.jingyang.financepriceservice.domain.modelresponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import static org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageAPIKeywords.*;
+import static org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageAPIKeywords.*;
 import lombok.Data;
 
 @Data

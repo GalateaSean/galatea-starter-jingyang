@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service.service;
+package org.galatea.jingyang.financepriceservice.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -7,13 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
-import org.galatea.jingyang.finance_price_service.domain.PricesSet;
-import org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageJSON;
+import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
+import org.galatea.jingyang.financepriceservice.domain.PricesSet;
+import org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageDataPoint;
+import org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import static org.galatea.jingyang.finance_price_service.domain.alpha_vantage_objects.AlphaVantageAPIKeywords.*;
+import static org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageAPIKeywords.*;
 
 /**
  * Deals with the processing logic for upcoming queries.
@@ -115,12 +116,44 @@ public class QueryLogicService {
     ObjectMapper objectMapper = new ObjectMapper();
     String mode = days < compactModeDataPoints ? COMPACT : FULL;
     String alphaVantageJsonString = alphaVantageService.fetch(symbol, mode);
-    PricesSet pricesSetToUpdate = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class).getPricesToUpdate(datesToUpdate);
+    AlphaVantageJSON alphaVantageJSON = objectMapper.readValue(alphaVantageJsonString, AlphaVantageJSON.class);
+    PricesSet pricesSetToUpdate = getPricesToUpdate(alphaVantageJSON, datesToUpdate);
     if (pricesSetToUpdate == null) {
       return null;
     }
     mySQLService.insertPrices(pricesSetToUpdate);
     return String.format(updateSucceedMessage, symbol);
+  }
+
+  /**
+   * Gets a PricesSet of data points to be inserted into database
+   *
+   * @param alphaVantageJSON Custom module storing JSON info from Alpha Vantage
+   * @param datesToUpdate A list of dates on which price data is to be inserted
+   * @return  PricesSet
+   */
+  private PricesSet getPricesToUpdate(AlphaVantageJSON alphaVantageJSON, List<String> datesToUpdate) {
+    if (alphaVantageJSON.getErrorMessage() != null) return null;
+    ArrayList<OneDayPrice> pricesList = new ArrayList<>();
+    // Add each date to be inserted into prices list
+    for (String date : datesToUpdate) {
+      AlphaVantageDataPoint alphaVantageDataPoint = alphaVantageJSON.getTimeSeries().get(date);
+      OneDayPrice oneDayPrice = OneDayPrice.builder()
+          .symbol(alphaVantageJSON.getMetaData().getSymbol())
+          .date(date)
+          .open(alphaVantageDataPoint.getOpen())
+          .high(alphaVantageDataPoint.getHigh())
+          .low(alphaVantageDataPoint.getLow())
+          .close(alphaVantageDataPoint.getClose())
+          .volume(alphaVantageDataPoint.getVolume())
+          .build();
+      pricesList.add(oneDayPrice);
+    }
+    return PricesSet.builder()
+        .symbol(alphaVantageJSON.getMetaData().getSymbol())
+        .days(pricesList.size())
+        .prices(pricesList)
+        .build();
   }
 
   /**

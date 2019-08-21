@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service.service;
+package org.galatea.jingyang.financepriceservice.service;
 
 import java.io.IOException;
 import java.net.URL;

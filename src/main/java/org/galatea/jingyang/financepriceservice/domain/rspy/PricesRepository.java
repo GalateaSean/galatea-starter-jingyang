@@ -1,8 +1,8 @@
-package org.galatea.jingyang.finance_price_service.domain.rspy;
+package org.galatea.jingyang.financepriceservice.domain.rspy;
 
 import java.util.ArrayList;
-import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
-import org.galatea.jingyang.finance_price_service.domain.OneDayPrice.OneDayPriceId;
+import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
+import org.galatea.jingyang.financepriceservice.domain.OneDayPrice.OneDayPriceId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

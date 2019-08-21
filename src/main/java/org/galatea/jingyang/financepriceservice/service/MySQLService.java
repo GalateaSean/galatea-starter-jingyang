@@ -1,12 +1,12 @@
-package org.galatea.jingyang.finance_price_service.service;
+package org.galatea.jingyang.financepriceservice.service;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import org.galatea.jingyang.finance_price_service.domain.OneDayPrice;
-import org.galatea.jingyang.finance_price_service.domain.OneDayPrice.OneDayPriceId;
-import org.galatea.jingyang.finance_price_service.domain.PricesSet;
-import org.galatea.jingyang.finance_price_service.domain.rspy.ClosedDatesRepository;
-import org.galatea.jingyang.finance_price_service.domain.rspy.PricesRepository;
+import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
+import org.galatea.jingyang.financepriceservice.domain.OneDayPrice.OneDayPriceId;
+import org.galatea.jingyang.financepriceservice.domain.PricesSet;
+import org.galatea.jingyang.financepriceservice.domain.rspy.ClosedDatesRepository;
+import org.galatea.jingyang.financepriceservice.domain.rspy.PricesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

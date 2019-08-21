@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service;
+package org.galatea.jingyang.financepriceservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
