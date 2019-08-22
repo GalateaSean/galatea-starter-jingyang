@@ -1,8 +1,8 @@
-package org.galatea.jingyang.finance_price_service.entrypoint;
+package org.galatea.jingyang.financepriceservice.entrypoint;
   import java.io.IOException;
   import java.text.ParseException;
-  import org.galatea.jingyang.finance_price_service.domain.PricesSet;
-  import org.galatea.jingyang.finance_price_service.service.QueryLogicService;
+  import org.galatea.jingyang.financepriceservice.domain.PricesSet;
+  import org.galatea.jingyang.financepriceservice.service.QueryLogicService;
   import org.springframework.beans.factory.annotation.Autowired;
   import org.springframework.web.bind.annotation.GetMapping;
   import org.springframework.web.bind.annotation.RequestParam;

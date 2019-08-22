@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service.domain;
+package org.galatea.jingyang.financepriceservice.domain.modelresponse;
 
 import lombok.experimental.UtilityClass;
 

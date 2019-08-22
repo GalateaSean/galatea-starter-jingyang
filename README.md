@@ -34,15 +34,19 @@ Maintain data on MySQL, when a user request comes, the server requests data from
 
     Handles requests for accessing Alpha Vantage through API.
 #### Domain Objects
+- Alpha Vantage Objects
+    1) AlphaVantageAPIKeywords: a utility class with all possible keys for JSON object 
+    fetched from Alpha Vantage
+    2) AlphaVantageJSON / AlphaVantageMetaData / AlphaVantageDataPoint: Models
+    for deserializing JSON strings replied by Alpha Vantage.
+
 - OneDayPrice
 
     The price data of one day for some stock. Fields include symbol, date, price values (open, high, low, close), volume.
 - PricesSet
 
     Union of price data for a specific stock in recent days. Fields include symbol, days, prices(list of OneDayPrice). 
-- AlphaVantageJSONKeys
 
-    An Enum including all possible keys for JSON object fetched from Alpha Vantage.
 - ClosedDate
     
     Market closed date in String type. Format "yyyy-MM-dd".

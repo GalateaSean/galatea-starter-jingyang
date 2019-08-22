@@ -1,4 +1,4 @@
-package org.galatea.jingyang.finance_price_service.domain;
+package org.galatea.jingyang.financepriceservice.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
