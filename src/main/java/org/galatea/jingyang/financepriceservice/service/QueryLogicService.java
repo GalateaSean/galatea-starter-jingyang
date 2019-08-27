@@ -55,7 +55,6 @@ public class QueryLogicService {
         || mySQLService.isCloseDay(date);
   }
 
-
   /**
    * Counts back specific number of days from yesterday for dates wanted
    *
@@ -73,10 +72,11 @@ public class QueryLogicService {
     int countDays = 1;
     // Number of market open days ever met
     int openDatesNumber = 0;
+    Calendar calendar = Calendar.getInstance();
     while (openDatesNumber < days) {
-      Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.DATE, -countDays);
       String countingDate = new SimpleDateFormat(dateFormat).format(calendar.getTime());
+      calendar.clear();
       if (!marketClosed(countingDate)) {
         openDatesList.add(countingDate);
         ++openDatesNumber;
@@ -138,6 +138,11 @@ public class QueryLogicService {
     // Add each date to be inserted into prices list
     for (String date : datesToUpdate) {
       AlphaVantageDataPoint alphaVantageDataPoint = alphaVantageJSON.getTimeSeries().get(date);
+      // If a date doesn't exist in Alpha Vantage data, then it should be a market closed date. Update database with that date.
+      if (alphaVantageDataPoint == null) {
+        mySQLService.insertClosedDate(date);
+        continue;
+      }
       OneDayPrice oneDayPrice = OneDayPrice.builder()
           .symbol(alphaVantageJSON.getMetaData().getSymbol())
           .date(date)
