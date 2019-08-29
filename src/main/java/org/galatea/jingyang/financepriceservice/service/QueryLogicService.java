@@ -72,8 +72,8 @@ public class QueryLogicService {
     int countDays = 1;
     // Number of market open days ever met
     int openDatesNumber = 0;
-    Calendar calendar = Calendar.getInstance();
     while (openDatesNumber < days) {
+      Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.DATE, -countDays);
       String countingDate = new SimpleDateFormat(dateFormat).format(calendar.getTime());
       calendar.clear();
