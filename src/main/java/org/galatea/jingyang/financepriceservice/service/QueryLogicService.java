@@ -7,9 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
 import org.galatea.jingyang.financepriceservice.domain.PricesSet;
 import org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageDataPoint;
@@ -75,10 +72,11 @@ public class QueryLogicService {
     int countDays = 1;
     // Number of market open days ever met
     int openDatesNumber = 0;
+    Calendar calendar = Calendar.getInstance();
     while (openDatesNumber < days) {
-      Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.DATE, -countDays);
       String countingDate = new SimpleDateFormat(dateFormat).format(calendar.getTime());
+      calendar.clear();
       if (!marketClosed(countingDate)) {
         openDatesList.add(countingDate);
         ++openDatesNumber;
