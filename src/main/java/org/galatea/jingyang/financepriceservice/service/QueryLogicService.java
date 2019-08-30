@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
 import org.galatea.jingyang.financepriceservice.domain.PricesSet;
 import org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageDataPoint;
@@ -19,6 +21,8 @@ import static org.galatea.jingyang.financepriceservice.domain.modelresponse.Alph
 /**
  * Deals with the processing logic for upcoming queries.
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Service
 public class QueryLogicService {
 

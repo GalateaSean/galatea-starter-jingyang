@@ -3,7 +3,9 @@ package org.galatea.jingyang.financepriceservice.service;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
  * Requests price data from Alpha Vantage API
  */
 @NoArgsConstructor
+@AllArgsConstructor
 @Service
 public class AlphaVantageService {
 
