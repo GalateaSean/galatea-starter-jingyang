@@ -23,7 +23,7 @@ public class PricesSetTest {
   }
 
   @Test
-  public void validOneDayPrice() {
+  public void validPricesSet() {
     ArrayList<OneDayPrice> oneDayPriceList = TestDataGenerator.oneDayPriceList(1);
     PricesSet pricesSet = PricesSet.builder()
         .symbol("MSFT")
