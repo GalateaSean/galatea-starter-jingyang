@@ -2,7 +2,6 @@ package org.galatea.jingyang.financepriceservice.domain;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
