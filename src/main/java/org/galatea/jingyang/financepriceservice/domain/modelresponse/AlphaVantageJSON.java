@@ -1,12 +1,8 @@
 package org.galatea.jingyang.financepriceservice.domain.modelresponse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
-import org.galatea.jingyang.financepriceservice.domain.PricesSet;
 import static org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageAPIKeywords.*;
 
 @Data

@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.galatea.jingyang.financepriceservice.domain.OneDayPrice;
 import org.galatea.jingyang.financepriceservice.domain.PricesSet;
 import org.galatea.jingyang.financepriceservice.domain.modelresponse.AlphaVantageDataPoint;
@@ -19,6 +21,8 @@ import static org.galatea.jingyang.financepriceservice.domain.modelresponse.Alph
 /**
  * Deals with the processing logic for upcoming queries.
  */
+@NoArgsConstructor
+@AllArgsConstructor
 @Service
 public class QueryLogicService {
 
@@ -55,7 +59,6 @@ public class QueryLogicService {
         || mySQLService.isCloseDay(date);
   }
 
-
   /**
    * Counts back specific number of days from yesterday for dates wanted
    *
@@ -77,6 +80,7 @@ public class QueryLogicService {
       Calendar calendar = Calendar.getInstance();
       calendar.add(Calendar.DATE, -countDays);
       String countingDate = new SimpleDateFormat(dateFormat).format(calendar.getTime());
+      calendar.clear();
       if (!marketClosed(countingDate)) {
         openDatesList.add(countingDate);
         ++openDatesNumber;
@@ -138,6 +142,11 @@ public class QueryLogicService {
     // Add each date to be inserted into prices list
     for (String date : datesToUpdate) {
       AlphaVantageDataPoint alphaVantageDataPoint = alphaVantageJSON.getTimeSeries().get(date);
+      // If a date doesn't exist in Alpha Vantage data, then it should be a market closed date. Update database with that date.
+      if (alphaVantageDataPoint == null) {
+        mySQLService.insertClosedDate(date);
+        continue;
+      }
       OneDayPrice oneDayPrice = OneDayPrice.builder()
           .symbol(alphaVantageJSON.getMetaData().getSymbol())
           .date(date)
